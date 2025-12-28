@@ -1,0 +1,90 @@
+import java.util.Scanner;
+
+class Product {
+    int id;
+    String name;
+    double price;
+
+    Product(int id, String name, double price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+}
+
+class CartItem {
+    Product product;
+    int quantity;
+
+    CartItem(Product product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    double getTotalPrice() {
+        return product.price * quantity;
+    }
+}
+
+public class SupermarketBilling {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Product[] products = {
+                new Product(1, "Apple", 100),
+                new Product(2, "Milk", 10),
+                new Product(3, "Bread", 30),
+                new Product(4, "Eggs", 6.25)
+        };
+
+        CartItem[] cart = new CartItem[100];
+        int cartIndex = 0;
+
+        System.out.println("Welcome to the Supermarket Billing System");
+        char choice=9;
+
+        do {
+            System.out.println("\nAvailable Products:");
+            for (Product product : products) {
+                System.out.println(product.id + ". " + product.name + " - $" + product.price);
+            }
+
+            System.out.print("\nEnter product ID to add to cart: ");
+            int productId = scanner.nextInt();
+            Product selectedProduct = null;
+
+            for (Product product : products) {
+                if (product.id == productId) {
+                    selectedProduct = product;
+                    break;
+                }
+            }
+
+            if (selectedProduct == null) {
+                System.out.println("Invalid Product ID!");
+                continue;
+            }
+
+            System.out.print("Enter quantity: ");
+            int quantity = scanner.nextInt();
+
+            cart[cartIndex++] = new CartItem(selectedProduct, quantity);
+
+            System.out.print("Do you want to add more items? (y/n): ");
+            choice = scanner.next().charAt(0);
+
+        } while (choice == 'y' || choice == 'Y');
+        System.out.println("\n------ BILL ------");
+        double total = 0;
+        for (int i = 0; i < cartIndex; i++) {
+            CartItem item = cart[i];
+            double itemTotal = item.getTotalPrice();
+            System.out.printf("%s x %d = $%.2f\n", item.product.name, item.quantity, itemTotal);
+            total += itemTotal;
+        }
+        System.out.printf("Total Amount: $%.2f\n", total);
+        System.out.println("------------------");
+
+        scanner.close();
+    }
+}
