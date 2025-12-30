@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StreamStall</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+body{background:#f5f7fb;font-family:Segoe UI}
+.hidden{display:none}
+.card{border-radius:12px;box-shadow:0 4px 10px #0001}
+.hero{background:linear-gradient(135deg,#4361ee,#3a0ca3);color:#fff;padding:60px;border-radius:0 0 30px 30px}
+.chat-icon{position:fixed;bottom:20px;right:20px;background:#4361ee;color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.chat{position:fixed;bottom:90px;right:20px;width:320px;height:420px;background:#fff;border-radius:15px;display:none;flex-direction:column;box-shadow:0 5px 20px #0003}
+.chat-h{background:#4361ee;color:#fff;padding:10px}
+.chat-b{flex:1;padding:10px;overflow:auto}
+.msg{padding:8px 12px;border-radius:15px;margin:5px 0}
+.bot{background:#eee}
+.user{background:#4361ee;color:#fff;margin-left:auto}
+</style>
+</head>
+
+<body>
+<nav class="navbar bg-white shadow-sm px-4">
+<b class="navbar-brand text-primary"><i class="fa fa-store"></i> StreamStall</b>
+<div>
+<a href="#" onclick="show('home')" class="me-3">Home</a>
+<a href="#" onclick="show('register')" class="me-3">Register</a>
+<a href="#" onclick="show('login')">Login</a>
+</div>
+</nav>
+
+<div class="hero text-center">
+<h1>StreamStall Ticketing</h1>
+<p>Online Stall Booking System</p>
+<button class="btn btn-light" onclick="show('register')">Get Started</button>
+</div>
+
+<div class="container mt-4">
+<div id="home">
+<h3>Available Stalls</h3>
+<div class="row" id="stalls"></div>
+</div>
+
+<div id="register" class="hidden">
+<h3>Seller Registration</h3>
+<input class="form-control mb-2" placeholder="Name">
+<input class="form-control mb-2" placeholder="Phone">
+<input class="form-control mb-2" placeholder="Business Name">
+<select class="form-control mb-2"><option>Large</option><option>Small</option></select>
+<input type="password" class="form-control mb-2" placeholder="Password">
+<button class="btn btn-primary w-100" onclick="show('login')">Register</button>
+</div>
+
+<div id="login" class="hidden">
+<h3>Login</h3>
+<input class="form-control mb-2" placeholder="Phone">
+<input type="password" class="form-control mb-2" placeholder="Password">
+<button class="btn btn-primary w-100" onclick="show('dashboard')">Login</button>
+</div>
+
+<div id="dashboard" class="hidden">
+<h3>Dashboard</h3>
+<table class="table">
+<tr><th>Stall</th><th>Days</th><th>Status</th></tr>
+<tr><td>A-12</td><td>3</td><td class="text-success">Paid</td></tr>
+<tr><td>B-05</td><td>2</td><td class="text-warning">Pending</td></tr>
+</table>
+</div>
+</div>
+
+<div class="chat-icon" onclick="chat.style.display='flex'">
+<i class="fa fa-robot fa-2x"></i>
+</div>
+
+<div class="chat" id="chat">
+<div class="chat-h d-flex justify-content-between">
+<b>Assistant</b>
+<i class="fa fa-times" onclick="chat.style.display='none'"></i>
+</div>
+<div class="chat-b" id="chatBody">
+<div class="msg bot">Hi! Ask about booking, price or payment.</div>
+</div>
+<div class="p-2">
+<input id="msg" class="form-control" placeholder="Type..." onkeydown="if(event.key=='Enter')send()">
+</div>
+</div>
+
+<script>
+const pages=['home','register','login','dashboard']
+function show(p){pages.forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(p).classList.remove('hidden')}
+
+const stalls=[
+{name:'Diamond Delights',price:'$200/day'},
+{name:'Tasty Bites',price:'$80/day'},
+{name:'Tech Haven',price:'$250/day'}
+]
+stalls.forEach(s=>stallsDiv=document.getElementById('stalls').innerHTML+=
+`<div class="col-md-4"><div class="card p-3"><b>${s.name}</b><p>${s.price}</p><button class="btn btn-sm btn-primary">Book</button></div></div>`)
+
+function send(){
+let m=msg.value;if(!m)return
+chatBody.innerHTML+=`<div class="msg user">${m}</div>`
+chatBody.innerHTML+=`<div class="msg bot">Please login to continue booking.</div>`
+msg.value=''
+}
+</script>
+</body>
+</html>
